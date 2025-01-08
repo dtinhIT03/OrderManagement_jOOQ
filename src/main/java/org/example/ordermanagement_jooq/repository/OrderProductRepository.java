@@ -8,4 +8,5 @@ public interface OrderProductRepository {
     Void save(List<OrderProduct> request);
 
     List<OrderProduct> getAllByOrderId(Long orderId);
+    List<OrderProduct> findAllByOrderIds(List<Long> orderIds);
 }

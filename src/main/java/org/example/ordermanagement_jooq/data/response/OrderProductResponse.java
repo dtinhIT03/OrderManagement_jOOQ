@@ -1,8 +1,6 @@
 package org.example.ordermanagement_jooq.data.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -13,4 +11,5 @@ public class OrderProductResponse {
     private ProductResponse productResponse;
     private Long quantity;
     private BigDecimal totalPrice;
+
 }

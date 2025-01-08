@@ -10,4 +10,5 @@ public interface UserRepository {
     List<User> findAllById(List<Long> id);
     User findById(Long id);
 
+    List<User> findAllByListId(List<Long> userIds);
 }

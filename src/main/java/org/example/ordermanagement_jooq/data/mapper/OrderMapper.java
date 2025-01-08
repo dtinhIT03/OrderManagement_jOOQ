@@ -4,10 +4,14 @@ import generated_sources.tables.pojos.Order;
 import org.example.ordermanagement_jooq.data.request.OrderRequest;
 import org.example.ordermanagement_jooq.data.response.OrderResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.lang.annotation.Target;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
+    @Mapping(target ="id", ignore = true)
     Order toOrder(OrderRequest request);
 
     OrderResponse toOrderResponse(Order order);

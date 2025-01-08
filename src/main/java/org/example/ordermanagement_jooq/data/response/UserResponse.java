@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
-    String fullName;
+    String fullname;
     String address;
     String phone;
 }

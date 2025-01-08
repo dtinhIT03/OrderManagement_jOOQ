@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderResponse {
     Long id;
     LocalDateTime dateOrder;

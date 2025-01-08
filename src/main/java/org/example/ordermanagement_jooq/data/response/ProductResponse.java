@@ -5,7 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
