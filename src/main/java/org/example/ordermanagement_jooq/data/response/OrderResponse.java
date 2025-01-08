@@ -18,8 +18,6 @@ public class OrderResponse {
     LocalDateTime dateDelivery;
     LocalDateTime dateRecieve;
     StatusOrder status;
-    String fullName;
-    String address;
-    String phone;
+    UserResponse userResponse;
     List<OrderProductResponse> items;
 }
