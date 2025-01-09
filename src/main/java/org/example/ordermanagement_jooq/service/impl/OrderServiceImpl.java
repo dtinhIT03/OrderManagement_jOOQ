@@ -11,6 +11,7 @@ import org.example.ordermanagement_jooq.data.mapper.OrderMapper;
 import org.example.ordermanagement_jooq.data.mapper.OrderProductMapper;
 import org.example.ordermanagement_jooq.data.mapper.ProductMapper;
 import org.example.ordermanagement_jooq.data.mapper.UserMapper;
+import org.example.ordermanagement_jooq.data.request.FilterCondition;
 import org.example.ordermanagement_jooq.data.request.OrderProductRequest;
 import org.example.ordermanagement_jooq.data.request.OrderRequest;
 import org.example.ordermanagement_jooq.data.response.*;
@@ -19,6 +20,8 @@ import org.example.ordermanagement_jooq.repository.OrderRepository;
 import org.example.ordermanagement_jooq.repository.ProductRepository;
 import org.example.ordermanagement_jooq.repository.UserRepository;
 import org.example.ordermanagement_jooq.service.OrderService;
+import org.jooq.Condition;
+import org.jooq.impl.DSL;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -177,6 +180,44 @@ public class OrderServiceImpl implements OrderService {
         }).toList();
         return toPageResponse(pageable,orderResponses,page);
 
+    }
+
+    @Override
+    public PageResponse<OrderResponse> searchOrders(List<FilterCondition> filterConditions, Pageable pageable) {
+        Page<Order> orderPage = orderRepository.searchOrders(filterConditions,pageable);
+        List<Order> orders = orderPage.getContent();
+
+        //lấy ra list userId
+        List<Long> userIds = orders.stream().map(Order::getUserId).toList();
+        //query ra list user cho vào 1 map<id,userResponse>
+        Map<Long,UserResponse> userResponseMap = userRepository.findAllByListId(userIds).stream().collect(Collectors.toMap(User::getId,userMapper::toUserReponse));
+        //lấy ra list orderId
+        List<Long> orderIds = orders.stream().map(Order::getId).toList();
+        //lấy ra list orderProduct
+        List<OrderProduct> orderProducts = orderProductRepository.findAllByOrderIds(orderIds);
+        //lấy ra list productId
+        List<Long> productIds = orderProducts.stream().map(OrderProduct::getProductId).toList();
+        //lấy ra list product
+        Map<Long,ProductResponse> productResponseMap = productRepository.findAllByListId(productIds).stream().collect(Collectors.toMap(Product::getId,productMapper::toProductResponse));
+        //map OrderProduct sang OrderProductResponse
+        Map<Long,OrderProductResponse> orderProductResponseMap = orderProducts.stream().collect(Collectors.toMap(OrderProduct::getId,
+                orderProduct -> OrderProductResponse.builder()
+                        .productResponse(productResponseMap.get(orderProduct.getProductId()))
+                        .quantity(orderProduct.getQuantity())
+                        .totalPrice(orderProduct.getTotalPrice())
+                        .build()));
+
+        //map Order sang OrderResponse
+        List<OrderResponse> orderResponses = orders.stream().map(order -> {
+            //lấy UserResponse cho Order
+            UserResponse userResponse = userResponseMap.get(order.getUserId());
+            //lấy danh sách OrderProductResponse cho Order
+            List<OrderProductResponse> orderProductResponses = orderProducts.stream().filter(op -> op.getOrderId().equals(order.getId()))
+                    .map(op -> orderProductResponseMap.get(op.getId())).toList();
+            //tạo OrderResponse
+            return toResponse(order,userResponse,orderProductResponses);
+        }).toList();
+        return toPageResponse(pageable,orderResponses,orderPage);
     }
 
     private OrderResponse toResponse(Order order,UserResponse userResponse,List<OrderProductResponse> orderProductResponses){
