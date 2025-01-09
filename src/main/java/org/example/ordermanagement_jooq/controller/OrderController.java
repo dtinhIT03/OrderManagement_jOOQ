@@ -34,4 +34,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrders(pageable));
     }
 
+    @GetMapping("/page-order")
+    public ResponseEntity<PageResponse<OrderResponse>> getPageOrders(Pageable pageable){
+        return ResponseEntity.ok(orderService.getPageOrders( pageable));
+    }
+
 }

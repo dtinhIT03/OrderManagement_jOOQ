@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 public class PageResponse<T> {
-    private int totalElements;
-    private int totalPages;
+    private long totalElements;
+    private long totalPages;
     private int pageNo;
     private int pageSize;
     private List<T> content;

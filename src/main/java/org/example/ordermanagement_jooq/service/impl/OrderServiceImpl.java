@@ -139,11 +139,61 @@ public class OrderServiceImpl implements OrderService {
         return new PageImpl<>(orderResponses, pageable, orders.getTotalElements());
     }
 
-    public OrderResponse toResponse(Order order,UserResponse userResponse,List<OrderProductResponse> orderProductResponses){
+    @Override
+    public PageResponse<OrderResponse> getPageOrders(Pageable pageable) {
+        //get list order dựa vào page.
+        Page<Order> page = orderRepository.getOrders(pageable);
+        List<Order> orders = page.getContent();
+
+        //lấy ra list userId
+        List<Long> userIds = orders.stream().map(Order::getUserId).toList();
+        //query ra list user cho vào 1 map<id,userResponse>
+        Map<Long,UserResponse> userResponseMap = userRepository.findAllByListId(userIds).stream().collect(Collectors.toMap(User::getId,userMapper::toUserReponse));
+        //lấy ra list orderId
+        List<Long> orderIds = orders.stream().map(Order::getId).toList();
+        //lấy ra list orderProduct
+        List<OrderProduct> orderProducts = orderProductRepository.findAllByOrderIds(orderIds);
+        //lấy ra list productId
+        List<Long> productIds = orderProducts.stream().map(OrderProduct::getProductId).toList();
+        //lấy ra list product
+        Map<Long,ProductResponse> productResponseMap = productRepository.findAllByListId(productIds).stream().collect(Collectors.toMap(Product::getId,productMapper::toProductResponse));
+        //map OrderProduct sang OrderProductResponse
+        Map<Long,OrderProductResponse> orderProductResponseMap = orderProducts.stream().collect(Collectors.toMap(OrderProduct::getId,
+                orderProduct -> OrderProductResponse.builder()
+                        .productResponse(productResponseMap.get(orderProduct.getProductId()))
+                        .quantity(orderProduct.getQuantity())
+                        .totalPrice(orderProduct.getTotalPrice())
+                        .build()));
+
+        //map Order sang OrderResponse
+        List<OrderResponse> orderResponses = orders.stream().map(order -> {
+            //lấy UserResponse cho Order
+            UserResponse userResponse = userResponseMap.get(order.getUserId());
+            //lấy danh sách OrderProductResponse cho Order
+            List<OrderProductResponse> orderProductResponses = orderProducts.stream().filter(op -> op.getOrderId().equals(order.getId()))
+                    .map(op -> orderProductResponseMap.get(op.getId())).toList();
+            //tạo OrderResponse
+            return toResponse(order,userResponse,orderProductResponses);
+        }).toList();
+        return toPageResponse(pageable,orderResponses,page);
+
+    }
+
+    private OrderResponse toResponse(Order order,UserResponse userResponse,List<OrderProductResponse> orderProductResponses){
         OrderResponse orderResponse = orderMapper.toOrderResponse(order);
         orderResponse.setUserResponse(userResponse);
         orderResponse.setItems(orderProductResponses);
         return orderResponse;
 
     }
+    private PageResponse<OrderResponse> toPageResponse(Pageable pageable,List<OrderResponse> object,Page<Order> page){
+        return PageResponse.<OrderResponse>builder()
+                .content(object)
+                .pageNo(pageable.getPageNumber())
+                .pageSize(pageable.getPageSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .build();
+    }
+
 }

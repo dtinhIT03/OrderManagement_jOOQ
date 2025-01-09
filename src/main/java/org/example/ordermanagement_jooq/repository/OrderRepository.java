@@ -11,4 +11,5 @@ public interface OrderRepository {
     Order findById(Long id);
     Page<Order> getOrders(Pageable pageable);
     long countOrder();
+    List<Order> getPageOrders(Pageable pageable);
 }

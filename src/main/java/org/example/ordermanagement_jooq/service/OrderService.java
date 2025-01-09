@@ -10,4 +10,6 @@ public interface OrderService {
     Void save(OrderRequest request);
     OrderResponse getById(Long id);
     Page<OrderResponse> getOrders(Pageable pageable);
+
+    PageResponse<OrderResponse> getPageOrders(Pageable pageable);
 }
