@@ -221,10 +221,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderResponse toResponse(Order order,UserResponse userResponse,List<OrderProductResponse> orderProductResponses){
-        OrderResponse orderResponse = orderMapper.toOrderResponse(order);
-        orderResponse.setUserResponse(userResponse);
-        orderResponse.setItems(orderProductResponses);
-        return orderResponse;
+        return  orderMapper.toOrderResponse(order,userResponse,orderProductResponses);
 
     }
     private PageResponse<OrderResponse> toPageResponse(Pageable pageable,List<OrderResponse> object,Page<Order> page){
