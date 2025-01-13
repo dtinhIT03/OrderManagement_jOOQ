@@ -2,6 +2,8 @@ package org.example.ordermanagement_jooq.data.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.example.ordermanagement_jooq.data.EnumPattern;
@@ -17,6 +19,7 @@ import java.util.List;
 @Builder
 public class OrderRequest {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @NotBlank(message = "dateOrder must be not null")
     LocalDateTime dateOrder;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -26,10 +29,13 @@ public class OrderRequest {
     LocalDateTime dateRecieve;
 
     @EnumPattern(name = "status",regexp = "PENDING|PROCESSING|SHIPPED|DELIVERED|RECIEVED|CANCELED|FAILED|RETURNED")
+    @NotBlank(message = "status must be not null")
     StatusOrder status;
 
+    @NotBlank(message = "userId must be not null")
     Long userId;
 
+    @NotBlank(message = "items must be not null")
     List<OrderProductRequest> items;
 
 

@@ -208,15 +208,8 @@ public class OrderServiceImpl implements OrderService {
                         .build()));
 
         //map Order sang OrderResponse
-        List<OrderResponse> orderResponses = orders.stream().map(order -> {
-            //lấy UserResponse cho Order
-            UserResponse userResponse = userResponseMap.get(order.getUserId());
-            //lấy danh sách OrderProductResponse cho Order
-            List<OrderProductResponse> orderProductResponses = orderProducts.stream().filter(op -> op.getOrderId().equals(order.getId()))
-                    .map(op -> orderProductResponseMap.get(op.getId())).toList();
-            //tạo OrderResponse
-            return toResponse(order,userResponse,orderProductResponses);
-        }).toList();
+        List<OrderResponse> orderResponses = orderMapper.toListOrderResponse(orders,userResponseMap,orderProducts,orderProductResponseMap);
+//
         return toPageResponse(pageable,orderResponses,orderPage);
     }
 

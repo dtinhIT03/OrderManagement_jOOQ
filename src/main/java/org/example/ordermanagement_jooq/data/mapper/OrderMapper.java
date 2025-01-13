@@ -18,9 +18,9 @@ public abstract class OrderMapper {
     @Mapping(target ="id", ignore = true)
     public abstract Order toOrder(OrderRequest request);
 
-    public abstract  OrderResponse toOrderResponse(Order order,
-                                                  @Context UserResponse userResponse,
-                                                  @Context List<OrderProductResponse> orderProductResponses);
+    @Mapping(target = "userResponse", ignore = true)
+    @Mapping(target = "items", ignore = true)
+    public abstract  OrderResponse toOrderResponse(Order order);
 
     //dùng phương thức default hoặc aftermapping để xử lý các loại map phức tap
     @AfterMapping
@@ -32,8 +32,14 @@ public abstract class OrderMapper {
         orderResponse.setItems(orderProductResponses);
     }
 
-    public List<OrderResponse> toListOrderResponse( List<Order> orders
-                                                            ,@Context Map<Long,UserResponse> userResponseMap,
+    public OrderResponse toOrderResponse(Order order,UserResponse userResponse,List<OrderProductResponse> orderProductResponses){
+        OrderResponse response =  toOrderResponse(order);
+        afterMapping(response,userResponse,orderProductResponses);
+        return response;
+    }
+
+    public List<OrderResponse> toListOrderResponse( List<Order> orders,
+                                                            @Context Map<Long,UserResponse> userResponseMap,
                                                              @Context List<OrderProduct> orderProducts,
                                                             @Context Map<Long,OrderProductResponse> orderProductResponseMap){
         return orders.stream().map(order -> {
