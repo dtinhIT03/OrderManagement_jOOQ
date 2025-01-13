@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.example.ordermanagement_jooq.OrderManagementJOoqApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 28.76 s -- in org.example.ordermanagement_jooq.OrderManagementJOoqApplicationTests

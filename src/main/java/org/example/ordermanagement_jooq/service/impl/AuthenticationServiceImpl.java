@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
 
@@ -77,5 +78,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return null;
     }
     //hàm verify token
-    SignedJWT verifyToken(String token, boolean)
+    SignedJWT verifyToken(String token, boolean isRefresh) throws ParseException {
+        //parse ra đối tượng signedJWT để có thể làm việc với payload, header
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        JWSVerifier verifier =
+
+    }
 }
