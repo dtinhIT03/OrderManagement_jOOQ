@@ -43,7 +43,7 @@ public class OrderController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<PageResponse<OrderResponse>> searchOrders(@RequestBody   List<FilterCondition> filterConditions, Pageable pageable){
+    public ResponseEntity<PageResponse<OrderResponse>> searchOrders(@RequestBody List<FilterCondition> filterConditions, Pageable pageable){
         return ResponseEntity.ok(orderService.searchOrders(filterConditions,pageable));
     }
 

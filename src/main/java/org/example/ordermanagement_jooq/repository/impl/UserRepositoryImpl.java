@@ -31,6 +31,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User findByMail(String mail) {
+        return dslContext.selectFrom(USER).where(USER.MAIL.eq(mail)).fetchOne().into(User.class);
+    }
+
+    @Override
     public List<User> findAllByListId(List<Long> userIds) {
         return dslContext.selectFrom(USER)
                 .where(USER.ID.in(userIds))

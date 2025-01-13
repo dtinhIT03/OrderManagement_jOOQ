@@ -9,6 +9,7 @@ import java.util.Map;
 public interface UserRepository {
     List<User> findAllById(List<Long> id);
     User findById(Long id);
+    User findByMail(String mail);
 
     List<User> findAllByListId(List<Long> userIds);
 }
