@@ -3,15 +3,16 @@ package org.example.ordermanagement_jooq.data.mapper;
 import generated_sources.tables.pojos.OrderProduct;
 import javax.annotation.processing.Generated;
 import org.example.ordermanagement_jooq.data.request.OrderProductRequest;
+import org.example.ordermanagement_jooq.data.response.OrderProductResponse;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-01-13T17:47:16+0700",
+    date = "2025-01-14T14:24:09+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
 )
 @Component
-public class OrderProductMapperImpl implements OrderProductMapper {
+public class OrderProductMapperImpl extends OrderProductMapper {
 
     @Override
     public OrderProduct toOrderProduct(OrderProductRequest request) {
@@ -27,5 +28,19 @@ public class OrderProductMapperImpl implements OrderProductMapper {
         orderProduct.setQuantity( request.getQuantity() );
 
         return orderProduct;
+    }
+
+    @Override
+    public OrderProductResponse toOrderProductResponse(OrderProduct orderProduct) {
+        if ( orderProduct == null ) {
+            return null;
+        }
+
+        OrderProductResponse.OrderProductResponseBuilder orderProductResponse = OrderProductResponse.builder();
+
+        orderProductResponse.quantity( orderProduct.getQuantity() );
+        orderProductResponse.totalPrice( orderProduct.getTotalPrice() );
+
+        return orderProductResponse.build();
     }
 }

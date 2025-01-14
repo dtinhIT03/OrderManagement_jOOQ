@@ -13,6 +13,7 @@ import org.example.ordermanagement_jooq.data.request.CheckTokenRequest;
 import org.example.ordermanagement_jooq.data.request.RefreshToken;
 import org.example.ordermanagement_jooq.data.response.AuthenticationResponse;
 import org.example.ordermanagement_jooq.data.response.CheckTokenResponse;
+import org.example.ordermanagement_jooq.exception.ResourceNotFoundException;
 import org.example.ordermanagement_jooq.repository.BlackListTokenRepository;
 import org.example.ordermanagement_jooq.repository.UserRepository;
 import org.example.ordermanagement_jooq.service.AuthenticationService;
@@ -74,7 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         //lấy user ra sau đó kiểm tra password vs password trong request
-        User user = userRepository.findByMail(request.getMail());
+        User user = userRepository.findByMail(request.getMail()).orElseThrow(() -> new ResourceNotFoundException("User not found with mail!"));
         boolean authenticated = passwordEncoder.matches(request.getPassword(),user.getPassword());
         if(!authenticated){
             throw new RuntimeException();
@@ -107,7 +108,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         blackListTokenRepository.save(blackListToken);
 
         var mail = signedJWT.getJWTClaimsSet().getSubject();
-        var user = userRepository.findByMail(mail);
+        var user = userRepository.findByMail(mail).orElseThrow(()->new ResourceNotFoundException("User not found!"));
 
         var token = generateToken(user);
 

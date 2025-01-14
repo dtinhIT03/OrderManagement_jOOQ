@@ -13,7 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.Date;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class,ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleInternalServerException(Exception e, WebRequest request){
         System.out.println("handle Validation Exception");
@@ -24,9 +24,15 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
         errorResponse.setError(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+
+        String message =e.getMessage();
         if(e instanceof MethodArgumentTypeMismatchException){
             errorResponse.setMessage("Failed to convert value of type");
 
+        }else if(e instanceof ConstraintViolationException){
+            message=message.substring(message.indexOf(" ")+1);
+            errorResponse.setError("Parameter invalid");
+            errorResponse.setMessage(message);
         }
 
         return errorResponse;
@@ -44,7 +50,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setError(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         if(e instanceof HttpMessageNotReadableException){
-            errorResponse.setMessage("Invalid status Order");
+            errorResponse.setMessage(e.getMessage());
 
         }
 

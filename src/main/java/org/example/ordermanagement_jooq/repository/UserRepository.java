@@ -8,9 +8,15 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserRepository {
-    List<User> findAllById(List<Long> id);
-    User findById(Long id);
-    User findByMail(String mail);
+
+    Optional<User> findById(Long id);
+    Optional<User> findByMail(String mail);
 
     List<User> findAllByListId(List<Long> userIds);
+
+    User save(User user);
+
+    Boolean delete(Long id);
+
+    Boolean exitsById(Long id);
 }
