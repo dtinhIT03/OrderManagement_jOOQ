@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Autowired
     private  CustomJwtDecoder customJwtDecoder;
-    private final String PUBLIC_ENDPOINTS[] ={ "*"};
+    private final String PUBLIC_ENDPOINTS[] ={"/**"};
     /* SecurityFilterChain là 1 chuỗi các bộ lọc bảo mật đc áp dụng cho các request,
         httpSecurity là 1 API của Spring Security cho bạn cách custom cách bảo vệ(xác thực , phân quyền)
     *  */
@@ -24,7 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         /* dùng để kiểm soát quyền truy cập các endpoint bằng Role,Authority */
         httpSecurity.authorizeHttpRequests(auth ->
-                auth.requestMatchers(PUBLIC_ENDPOINTS).permitAll().anyRequest().permitAll());
+                auth.requestMatchers(PUBLIC_ENDPOINTS).permitAll().anyRequest().authenticated());
 
         /* cấu hình ứng dụng như 1 resource server, bảo vệ các endpoint bằng cách xác thực Jwt tokens,
         *   jwtAuthenconverter dùng để chuyển 1 jwt thành 1 đối tượng authentication

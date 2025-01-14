@@ -4,6 +4,7 @@
 package generated_sources;
 
 
+import generated_sources.tables.BlackListToken;
 import generated_sources.tables.Image;
 import generated_sources.tables.Order;
 import generated_sources.tables.OrderProduct;
@@ -17,6 +18,11 @@ import generated_sources.tables.User;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Tables {
+
+    /**
+     * The table <code>public.black_list_token</code>.
+     */
+    public static final BlackListToken BLACK_LIST_TOKEN = BlackListToken.BLACK_LIST_TOKEN;
 
     /**
      * The table <code>public.image</code>.

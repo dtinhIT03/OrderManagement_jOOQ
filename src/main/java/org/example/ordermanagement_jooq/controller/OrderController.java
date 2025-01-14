@@ -32,10 +32,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.save(request));
     }
 
-    @GetMapping("/list-order")
-    public ResponseEntity<Page<OrderResponse>> getOrders(Pageable pageable){
-        return ResponseEntity.ok(orderService.getOrders(pageable));
-    }
+//    @GetMapping("/list-order")
+//    public ResponseEntity<Page<OrderResponse>> getOrders(Pageable pageable){
+//        return ResponseEntity.ok(orderService.getOrders(pageable));
+//    }
 
     @GetMapping("/page-order")
     public ResponseEntity<PageResponse<OrderResponse>> getPageOrders(Pageable pageable){
@@ -43,7 +43,8 @@ public class OrderController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<PageResponse<OrderResponse>> searchOrders(@RequestBody List<FilterCondition> filterConditions, Pageable pageable){
+    public ResponseEntity<PageResponse<OrderResponse>> searchOrders(@RequestBody List<FilterCondition> filterConditions,
+                                                                    Pageable pageable){
         return ResponseEntity.ok(orderService.searchOrders(filterConditions,pageable));
     }
 

@@ -4,12 +4,14 @@
 package generated_sources;
 
 
+import generated_sources.tables.BlackListToken;
 import generated_sources.tables.Image;
 import generated_sources.tables.Order;
 import generated_sources.tables.OrderProduct;
 import generated_sources.tables.Product;
 import generated_sources.tables.ShoppingCart;
 import generated_sources.tables.User;
+import generated_sources.tables.records.BlackListTokenRecord;
 import generated_sources.tables.records.ImageRecord;
 import generated_sources.tables.records.OrderProductRecord;
 import generated_sources.tables.records.OrderRecord;
@@ -35,6 +37,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<BlackListTokenRecord> BLACK_LIST_TOKEN_PKEY = Internal.createUniqueKey(BlackListToken.BLACK_LIST_TOKEN, DSL.name("black_list_token_pkey"), new TableField[] { BlackListToken.BLACK_LIST_TOKEN.ID }, true);
     public static final UniqueKey<ImageRecord> IMAGE_PKEY = Internal.createUniqueKey(Image.IMAGE, DSL.name("image_pkey"), new TableField[] { Image.IMAGE.ID }, true);
     public static final UniqueKey<OrderRecord> ORDER_PKEY = Internal.createUniqueKey(Order.ORDER, DSL.name("order_pkey"), new TableField[] { Order.ORDER.ID }, true);
     public static final UniqueKey<OrderProductRecord> ORDER_PRODUCT_PKEY = Internal.createUniqueKey(OrderProduct.ORDER_PRODUCT, DSL.name("order_product_pkey"), new TableField[] { OrderProduct.ORDER_PRODUCT.ID }, true);

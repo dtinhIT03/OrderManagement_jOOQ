@@ -4,6 +4,7 @@
 package generated_sources;
 
 
+import generated_sources.tables.BlackListToken;
 import generated_sources.tables.Image;
 import generated_sources.tables.Order;
 import generated_sources.tables.OrderProduct;
@@ -31,6 +32,11 @@ public class Public extends SchemaImpl {
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.black_list_token</code>.
+     */
+    public final BlackListToken BLACK_LIST_TOKEN = BlackListToken.BLACK_LIST_TOKEN;
 
     /**
      * The table <code>public.image</code>.
@@ -78,6 +84,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            BlackListToken.BLACK_LIST_TOKEN,
             Image.IMAGE,
             Order.ORDER,
             OrderProduct.ORDER_PRODUCT,

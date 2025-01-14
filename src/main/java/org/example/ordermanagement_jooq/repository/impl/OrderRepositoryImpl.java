@@ -115,8 +115,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     private Object castToRequireType(String key,String value){
         if(value == null) return null;
         return switch (key){
-            case "dateOrder","dateDelivery","dateRecieve" -> LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME); //cast to localDateTime
-            case "id","userId" -> Long.parseLong(value);
+            case "date_order","date_delivery","date_recieve" -> LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME); //cast to localDateTime
+            case "id","userId","user_id" -> Long.parseLong(value);
             default -> value;
 
         };

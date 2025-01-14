@@ -82,67 +82,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderResponse> getOrders(Pageable pageable) {
-        Page<Order> orders = orderRepository.getOrders(pageable);
-        // Lấy tất cả user_id từ orders để query một lần
-        List<Long> userIds = orders.getContent().stream()
-                .map(Order::getUserId)
-                .distinct()
-                .collect(Collectors.toList());
-
-        // Query một lần để lấy tất cả users
-        Map<Long, UserResponse> userResponseMap = userRepository.findAllByListId(userIds).stream()
-                .collect(Collectors.toMap(User::getId, userMapper::toUserReponse));
-
-        // Lấy tất cả order_id để query orderProducts
-        List<Long> orderIds = orders.getContent().stream()
-                .map(Order::getId)
-                .collect(Collectors.toList());
-
-        // Query một lần lấy tất cả orderProducts
-        List<OrderProduct> allOrderProducts = orderProductRepository.findAllByOrderIds(orderIds);
-
-        // Nhóm orderProducts theo orderId
-        Map<Long, List<OrderProduct>> orderProductMap = allOrderProducts.stream()
-                .collect(Collectors.groupingBy(OrderProduct::getOrderId));
-
-        // Lấy tất cả product_id từ orderProducts để query products
-        List<Long> productIds = allOrderProducts.stream()
-                .map(OrderProduct::getProductId)
-                .distinct()
-                .collect(Collectors.toList());
-
-        // Query một lần lấy tất cả products
-        Map<Long, ProductResponse> productResponseMap = productRepository.findAllByListId(productIds).stream()
-                .collect(Collectors.toMap(Product::getId, productMapper::toProductResponse));
-
-        // Map sang OrderResponse
-        List<OrderResponse> orderResponses = orders.getContent().stream()
-                .map(order -> {
-                    // Lấy UserResponse tương ứng
-                    UserResponse userResponse = userResponseMap.get(order.getUserId());
-
-                    // Lấy và map OrderProducts sang OrderProductResponse
-                    List<OrderProduct> orderProducts = orderProductMap.getOrDefault(order.getId(), new ArrayList<>());
-                    List<OrderProductResponse> orderProductResponses = orderProducts.stream()
-                            .map(orderProduct -> {
-                                ProductResponse productResponse = productResponseMap.get(orderProduct.getProductId());
-                                return OrderProductResponse.builder()
-                                        .productResponse(productResponse)
-                                        .totalPrice(orderProduct.getTotalPrice())
-                                        .quantity(orderProduct.getQuantity())
-                                        .build();
-                            }).collect(Collectors.toList());
-
-                    // Tạo OrderResponse đầy đủ thông tin
-                    return toResponse(order, userResponse, orderProductResponses);
-                }).collect(Collectors.toList());
-
-        // Trả về Page<OrderResponse>
-        return new PageImpl<>(orderResponses, pageable, orders.getTotalElements());
-    }
-
-    @Override
     public PageResponse<OrderResponse> getPageOrders(Pageable pageable) {
         //get list order dựa vào page.
         Page<Order> page = orderRepository.getOrders(pageable);
@@ -226,5 +165,70 @@ public class OrderServiceImpl implements OrderService {
                 .totalPages(page.getTotalPages())
                 .build();
     }
+
+
+
+
+//    @Override
+//    public Page<OrderResponse> getOrders(Pageable pageable) {
+//        Page<Order> orders = orderRepository.getOrders(pageable);
+//        // Lấy tất cả user_id từ orders để query một lần
+//        List<Long> userIds = orders.getContent().stream()
+//                .map(Order::getUserId)
+//                .distinct()
+//                .collect(Collectors.toList());
+//
+//        // Query một lần để lấy tất cả users
+//        Map<Long, UserResponse> userResponseMap = userRepository.findAllByListId(userIds).stream()
+//                .collect(Collectors.toMap(User::getId, userMapper::toUserReponse));
+//
+//        // Lấy tất cả order_id để query orderProducts
+//        List<Long> orderIds = orders.getContent().stream()
+//                .map(Order::getId)
+//                .collect(Collectors.toList());
+//
+//        // Query một lần lấy tất cả orderProducts
+//        List<OrderProduct> allOrderProducts = orderProductRepository.findAllByOrderIds(orderIds);
+//
+//        // Nhóm orderProducts theo orderId
+//        Map<Long, List<OrderProduct>> orderProductMap = allOrderProducts.stream()
+//                .collect(Collectors.groupingBy(OrderProduct::getOrderId));
+//
+//        // Lấy tất cả product_id từ orderProducts để query products
+//        List<Long> productIds = allOrderProducts.stream()
+//                .map(OrderProduct::getProductId)
+//                .distinct()
+//                .collect(Collectors.toList());
+//
+//        // Query một lần lấy tất cả products
+//        Map<Long, ProductResponse> productResponseMap = productRepository.findAllByListId(productIds).stream()
+//                .collect(Collectors.toMap(Product::getId, productMapper::toProductResponse));
+//
+//        // Map sang OrderResponse
+//        List<OrderResponse> orderResponses = orders.getContent().stream()
+//                .map(order -> {
+//                    // Lấy UserResponse tương ứng
+//                    UserResponse userResponse = userResponseMap.get(order.getUserId());
+//
+//                    // Lấy và map OrderProducts sang OrderProductResponse
+//                    List<OrderProduct> orderProducts = orderProductMap.getOrDefault(order.getId(), new ArrayList<>());
+//                    List<OrderProductResponse> orderProductResponses = orderProducts.stream()
+//                            .map(orderProduct -> {
+//                                ProductResponse productResponse = productResponseMap.get(orderProduct.getProductId());
+//                                return OrderProductResponse.builder()
+//                                        .productResponse(productResponse)
+//                                        .totalPrice(orderProduct.getTotalPrice())
+//                                        .quantity(orderProduct.getQuantity())
+//                                        .build();
+//                            }).collect(Collectors.toList());
+//
+//                    // Tạo OrderResponse đầy đủ thông tin
+//                    return toResponse(order, userResponse, orderProductResponses);
+//                }).collect(Collectors.toList());
+//
+//        // Trả về Page<OrderResponse>
+//        return new PageImpl<>(orderResponses, pageable, orders.getTotalElements());
+//    }
+
 
 }

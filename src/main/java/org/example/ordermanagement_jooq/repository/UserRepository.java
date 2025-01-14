@@ -5,6 +5,7 @@ import org.example.ordermanagement_jooq.data.response.UserResponse;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface UserRepository {
     List<User> findAllById(List<Long> id);
