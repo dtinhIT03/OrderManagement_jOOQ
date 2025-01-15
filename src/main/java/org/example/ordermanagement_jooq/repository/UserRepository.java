@@ -19,4 +19,6 @@ public interface UserRepository {
     Boolean delete(Long id);
 
     Boolean exitsById(Long id);
+
+    Boolean exitsByMail(String mail);
 }

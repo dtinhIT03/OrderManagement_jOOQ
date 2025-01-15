@@ -60,5 +60,10 @@ public class UserRepositoryImpl implements UserRepository {
                 dslContext.selectFrom(USER).where(USER.ID.eq(id)));
     }
 
+    @Override
+    public Boolean exitsByMail(String mail) {
+        return dslContext.fetchExists(dslContext.selectFrom(USER).where(USER.MAIL.eq(mail)));
+    }
+
 
 }

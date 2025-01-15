@@ -1,6 +1,8 @@
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\config\CustomJwtDecoder.java
+F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\config\JOOQConfig.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\config\JwtAuthenticationEntryPoint.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\config\SecurityConfig.java
+F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\controller\AuthController.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\controller\OrderController.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\controller\ProductController.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\data\EnumPattern.java
@@ -41,7 +43,9 @@ F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jo
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\repository\ProductRepository.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\repository\UserRepository.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\service\AuthenticationService.java
+F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\service\AuthService.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\service\impl\AuthenticationServiceImpl.java
+F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\service\impl\AuthServiceImpl.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\service\impl\OrderProductServiceImpl.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\service\impl\OrderServiceImpl.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\service\impl\UserServiceImpl.java
