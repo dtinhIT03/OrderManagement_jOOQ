@@ -7,16 +7,19 @@ import org.example.ordermanagement_jooq.data.response.AuthenticationResponse;
 import org.example.ordermanagement_jooq.exception.EmailAlreadyExistException;
 import org.example.ordermanagement_jooq.repository.UserRepository;
 import org.example.ordermanagement_jooq.service.AuthService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
     UserRepository userRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
     @Override
     public boolean register(AuthenticationRequest request) {
         //kiem tra mail da ton tai chua
         if(!userRepository.exitsByMail(request.getMail())){
+            passwordEncoder.encode(request.getPassword());
             User user = userMapper.toUser(request);
             userRepository.save(user);
             return true;

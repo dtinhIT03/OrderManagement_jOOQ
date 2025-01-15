@@ -27,6 +27,7 @@ F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jo
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\data\response\ResponseData.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\data\response\ResponseError.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\data\response\UserResponse.java
+F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\exception\EmailAlreadyExistException.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\exception\ErrorResponse.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\exception\GlobalExceptionHandler.java
 F:\MH_SOLUTION\OrderManagement_jOOQ\src\main\java\org\example\ordermanagement_jooq\exception\ResourceNotFoundException.java

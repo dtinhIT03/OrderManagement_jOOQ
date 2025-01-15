@@ -72,15 +72,7 @@ public class OrderServiceImpl implements OrderService {
         Map<Long, ProductResponse> ProductReponseMap = productRepository.findAllByListId(listProductId).stream()
                 .collect(Collectors.toMap(product -> product.getId(),productMapper::toProductResponse));
         // -> map sang List<OrderProductResponse>
-        List<OrderProductResponse> orderProductResponses = orderProductList.stream()
-                .map(orderProduct -> {
-                    ProductResponse productResponse = ProductReponseMap.get(orderProduct.getProductId());
-                    return OrderProductResponse.builder()
-                            .productResponse(productResponse)
-                            .totalPrice(orderProduct.getTotalPrice())
-                            .quantity(orderProduct.getQuantity())
-                            .build();
-                }).collect(Collectors.toList());
+        List<OrderProductResponse> orderProductResponses = orderProductList.stream().map(orderProduct -> orderProductMapper.toOrderProductResponse(orderProduct,ProductReponseMap.get(orderProduct.getProductId()))).toList();
         return toResponse(order,userResponse,orderProductResponses);
     }
 
@@ -104,12 +96,9 @@ public class OrderServiceImpl implements OrderService {
         //lấy ra list product
         Map<Long,ProductResponse> productResponseMap = productRepository.findAllByListId(productIds).stream().collect(Collectors.toMap(Product::getId,productMapper::toProductResponse));
         //map OrderProduct sang OrderProductResponse
-        Map<Long,OrderProductResponse> orderProductResponseMap = orderProducts.stream().collect(Collectors.toMap(OrderProduct::getId,
-                orderProduct -> OrderProductResponse.builder()
-                        .productResponse(productResponseMap.get(orderProduct.getProductId()))
-                        .quantity(orderProduct.getQuantity())
-                        .totalPrice(orderProduct.getTotalPrice())
-                        .build()));
+        Map<Long,OrderProductResponse> orderProductResponseMap = orderProducts.stream()
+                .collect(Collectors.toMap(OrderProduct::getId
+                ,orderProduct -> orderProductMapper.toOrderProductResponse(orderProduct,productResponseMap.get(orderProduct.getProductId()))));
 
         //map Order sang OrderResponse
         List<OrderResponse> orderResponses = orderMapper.toListOrderResponse(orders,userResponseMap,orderProducts,orderProductResponseMap);
