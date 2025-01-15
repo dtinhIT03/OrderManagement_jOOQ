@@ -8,11 +8,14 @@ import com.nimbusds.jwt.SignedJWT;
 import generated_sources.tables.pojos.BlackListToken;
 import generated_sources.tables.pojos.User;
 import lombok.RequiredArgsConstructor;
+import org.example.ordermanagement_jooq.data.mapper.UserMapper;
 import org.example.ordermanagement_jooq.data.request.AuthenticationRequest;
 import org.example.ordermanagement_jooq.data.request.CheckTokenRequest;
+import org.example.ordermanagement_jooq.data.request.LoginRequest;
 import org.example.ordermanagement_jooq.data.request.RefreshToken;
 import org.example.ordermanagement_jooq.data.response.AuthenticationResponse;
 import org.example.ordermanagement_jooq.data.response.CheckTokenResponse;
+import org.example.ordermanagement_jooq.exception.EmailAlreadyExistException;
 import org.example.ordermanagement_jooq.exception.ResourceNotFoundException;
 import org.example.ordermanagement_jooq.repository.BlackListTokenRepository;
 import org.example.ordermanagement_jooq.repository.UserRepository;
@@ -43,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final BlackListTokenRepository blackListTokenRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
     String generateToken(User user){
         //phải có header, và claim -> kí nó
         JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.HS512)
@@ -73,7 +77,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return "ROLE_USER";
     }
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(LoginRequest request) {
         //lấy user ra sau đó kiểm tra password vs password trong request
         User user = userRepository.findByMail(request.getMail()).orElseThrow(() -> new ResourceNotFoundException("User not found with mail!"));
         boolean authenticated = passwordEncoder.matches(request.getPassword(),user.getPassword());
@@ -129,5 +133,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 plus(refreshable, ChronoUnit.SECONDS).toEpochMilli()) : signedJWT.getJWTClaimsSet().getExpirationTime();
         if(!(verified && expiryTime.after(new Date()))) throw new RuntimeException();
         return signedJWT;
+    }
+    @Override
+    public boolean register(AuthenticationRequest request) {
+        //kiem tra mail da ton tai chua
+        if(!userRepository.exitsByMail(request.getMail())){
+            request.setPassword(passwordEncoder.encode(request.getPassword()));
+            User user = userMapper.toUser(request);
+            userRepository.save(user);
+            return true;
+        }else {
+            throw new EmailAlreadyExistException("email is existed!");
+        }
+
     }
 }

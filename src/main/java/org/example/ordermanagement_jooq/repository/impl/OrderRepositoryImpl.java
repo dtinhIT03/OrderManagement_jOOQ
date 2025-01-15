@@ -9,6 +9,7 @@ import org.example.ordermanagement_jooq.data.enums.StatusOrder;
 import org.example.ordermanagement_jooq.data.request.FilterCondition;
 import org.example.ordermanagement_jooq.exception.ResourceNotFoundException;
 import org.example.ordermanagement_jooq.repository.OrderRepository;
+import org.example.ordermanagement_jooq.util.PageResponseUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -74,7 +76,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Page<Order> searchOrders(List<FilterCondition> filterConditions, Pageable pageable) {
-        Condition condition = buildCondition(filterConditions);
+        Condition condition = PageResponseUtils.buildCondition(filterConditions);
 
         List<Order> orders = dslContext.selectFrom(ORDER)
                 .where(condition)
@@ -125,48 +127,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     }
 
-    private Condition buildCondition(List<FilterCondition> filters){
-        if(filters.isEmpty() || filters == null){
-            return DSL.noCondition(); // ko có câu truy vấn nào, where() sẽ đc loại bỏ
-        }
-        Condition condition = createCondition(filters.get(0));
 
-        for(FilterCondition filter :filters){
-            condition.and(createCondition(filter));
-        }
-        return condition;
-    }
-    private Condition createCondition(FilterCondition filter){
-        //xác định các field cần tìm
-        Field<Object> field = ORDER.field(filter.getField(),Object.class); //generic field
-        if(field == null){
-            throw new IllegalArgumentException("invalid field key:" +filter.getField());
-        }
-        Object castedValue = castToRequireType(filter.getField(),filter.getValue());
-        switch (filter.getOperator()){
-            case ":":
-                return field.eq( castedValue); //equal condition
-            case ">":
-                return field.gt((Comparable<?>) castedValue);
-            case "<":
-                return field.lt((Comparable<?>) castedValue);
-            case ">=":
-                return field.ge((Comparable<?>) castedValue);
-            case "<=":
-                return field.le((Comparable<?>) castedValue);
-            default:throw new IllegalArgumentException("unsupported operator:" + filter.getOperator());
-        }
-    }
-
-    private Object castToRequireType(String key,String value){
-        if(value == null) return null;
-        return switch (key){
-            case "date_order","date_delivery","date_recieve" -> LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME); //cast to localDateTime
-            case "id","userId","user_id" -> Long.parseLong(value);
-            default -> value;
-
-        };
-    }
 
 
 }
